@@ -1,0 +1,18 @@
+[
+  {
+    "role": "user",
+    "content": "/no_think Hello, how are you?"
+  },
+  {
+    "role": "assistant",
+    "content": "Hello! I'm doing well, thank you for asking. How are you doing today?"
+  },
+  {
+    "role": "user",
+    "content": "/no_think What was the first question i asked you?"
+  },
+  {
+    "role": "assistant",
+    "content": "The first question you asked was, \"Hello, how are you?\""
+  }
+]
