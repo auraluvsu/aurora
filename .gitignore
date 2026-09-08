@@ -1,0 +1,6 @@
+node_modules/
+*.env
+firebase/
+*.env.production
+/backend/src/generated/prisma
+/frontend/build
