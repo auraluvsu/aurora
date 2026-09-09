@@ -1,28 +1,14 @@
 import * as fs from "fs/promises";
+import { roleType, msgFmt } from "./types";
 
-type msgFmt = { role: string; content: string };
 let history: msgFmt[] = [];
 
-async function writeToFile(filePath: string, data: msgFmt[]): Promise<void> {
-    try {
-        const jsonString = JSON.stringify(data, null, 2);
-        await fs.writeFile(filePath, jsonString, "utf-8");
-
-        console.log("File written");
-    } catch (err) {
-        console.error("Failed to write to file:", err);
-    }
-}
-
-async function fetching(message: string) {
-    const rawJson = await fs.readFile("./history/history.json", "utf-8");
-    rawJson ? (history = JSON.parse(rawJson)) : (history = []);
-    history.push({ role: "user", content: message });
-
+async function fetching(role: roleType, message: string) {
+    history.push({ role, content: message });
     console.log("MESSAGE:", message);
 
     const requestBody = {
-        messages: history,
+        messages: [...profileHeader, ...history],
     };
 
     return await fetch("http://localhost:8080/v1/chat/completions", {
@@ -32,8 +18,8 @@ async function fetching(message: string) {
     });
 }
 
-async function main(message: string) {
-    const res = await fetching(message);
+async function main(role: roleType, message: string) {
+    const res = await fetching(role, message);
     const json = await res.json();
     const response = [];
 
@@ -46,10 +32,21 @@ async function main(message: string) {
     console.log(response);
 }
 
+async function loadHistory() {
+    try {
+        const rawJson = await fs.readFile("./history/history.json", "utf-8");
+        rawJson ? (history = JSON.parse(rawJson)) : (history = []);
+    } catch (err) {
+        console.error("Error reading history:", err);
+        history = [];
+    }
+}
+
 async function read() {
-    await main("/no_think Hello, how are you?");
-    await main("/no_think What was the first question i asked you?");
-    // await main("/no_think What were the two questions i just asked?");
+    const mem = await fs.readFile("./history/prompt.txt", "utf-8");
+    await receiveHeader(mem);
+    await loadHistory();
+    await main("user", "Hello! Who am I and what is my job?");
 }
 
 read().catch((e) => console.log("Error:", e));
