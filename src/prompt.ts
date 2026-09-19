@@ -1,18 +1,18 @@
 import * as fs from "fs/promises";
 import { roleType, msgFmt } from "./types";
 
-let profileHeader = [
+export let profileHeader: msgFmt[] = [
     { role: "user", content: "" },
     { role: "assistant", content: "" },
 ];
 
-async function cacheNewMem() {
+export async function cacheNewMem() {
     const pStat = await fs.stat("./history/prompt.txt");
     const cStat = await fs.stat("./history/header-cache.json");
     if (pStat.mtimeMs === cStat.mtimeMs) return;
 }
 
-async function receiveHeader(header: { role: roleType; content: string }[], memory: string) {
+export async function receiveHeader(header: msgFmt[], memory: string) {
     try {
         const requestBody = {
             messages: [{ role: "user", content: memory }],

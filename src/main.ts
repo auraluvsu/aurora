@@ -1,5 +1,7 @@
 import * as fs from "fs/promises";
 import { roleType, msgFmt } from "./types";
+import { writeToFile } from "./file";
+import { profileHeader, receiveHeader } from "./prompt";
 
 let history: msgFmt[] = [];
 
@@ -44,7 +46,7 @@ async function loadHistory() {
 
 async function read() {
     const mem = await fs.readFile("./history/prompt.txt", "utf-8");
-    await receiveHeader(mem);
+    await receiveHeader(profileHeader, mem);
     await loadHistory();
     await main("user", "Hello! Who am I and what is my job?");
 }
