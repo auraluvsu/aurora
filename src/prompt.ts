@@ -1,5 +1,5 @@
 import * as fs from "fs/promises";
-import { roleType, msgFmt } from "./types";
+import { msgFmt } from "./types";
 
 export let profileHeader: msgFmt[] = [
     { role: "user", content: "" },
